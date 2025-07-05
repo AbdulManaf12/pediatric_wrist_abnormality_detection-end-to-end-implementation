@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="description"
+      content="Enhancing wrist abnormality detection with YOLO: Analysis of state-of-the-art single-stage detection models for pediatric wrist imaging"
+    />
+    <meta
+      name="keywords"
+      content="Wrist fracture detection, Object localization, Medical imaging, Pediatric X-ray, Deep learning, YOLO, Computer Vision, Medical AI, Fracture Detection"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pediatric Wrist Abnormality Detection System</title>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css"
+    />
+
+    <style>
+      .hero-body {
+        padding: 3rem 1.5rem;
+      }
+      .publication-title {
+        margin-bottom: 1rem;
+      }
+      .author-block {
+        margin-right: 1rem;
+      }
+      .content img {
+        max-width: 100%;
+        height: auto;
+        margin: 1rem 0;
+      }
+      .caption {
+        font-style: italic;
+        margin-top: 0.5rem;
+        text-align: center;
+      }
+      .image-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        gap: 1rem;
+        margin: 2rem 0;
+      }
+      .image-item {
+        flex: 1;
+        min-width: 300px;
+        max-width: 45%;
+      }
+      .results-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+      }
+      .result-item {
+        text-align: center;
+      }
+      .result-item img {
+        width: 100%;
+        height: 200px;
+        object-fit: contain;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+      .highlight-box {
+        background-color: #f0f7ff;
+        border-left: 4px solid #3273dc;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        border-radius: 4px;
+      }
+      .metric-highlight {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+        border: 1px solid #e9ecef;
+      }
+      .tech-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 1rem 0;
+      }
+      .tech-badge {
+        background-color: #3273dc;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.875rem;
+      }
+      table {
+        font-size: 0.85rem;
+      }
+      .research-question {
+        background-color: #fff5f5;
+        border-left: 4px solid #ff6b6b;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 4px;
+      }
+      .medical-highlight {
+        background-color: #f0fff0;
+        border-left: 4px solid #28a745;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 4px;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        function copyBibtex() {
+          const bibtex = `@article{ahmed2024enhancing,
+  title={Enhancing wrist abnormality detection with YOLO: Analysis of state-of-the-art single-stage detection models},
+  author={Ahmed, A. and Imran, A. S. and Manaf, A. and Kastrati, Z. and Daudpota, S. M.},
+  journal={Biomedical Signal Processing and Control},
+  volume={93},
+  pages={106144},
+  year={2024},
+  month={Jul},
+  doi={10.1016/j.bspc.2024.106144},
+  url={https://www.sciencedirect.com/science/article/pii/S1746809424002027}
+}`;
+          navigator.clipboard.writeText(bibtex).then(
+            function () {
+              alert("BibTeX copied to clipboard!");
+            },
+            function () {
+              alert("Failed to copy BibTeX.");
+            }
+          );
+        }
+        window.copyBibtex = copyBibtex;
+      });
+    </script>
+  </head>
+  <body>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a
+          role="button"
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-body">
+        <div class="container is-widescreen">
+          <div class="columns is-centered">
+            <div class="column has-text-centered">
+              <h1 class="title is-1 publication-title">
+                🏥 Enhancing Wrist Abnormality Detection with YOLO: <br />
+                Analysis of State-of-the-Art Single-Stage Detection Models
+              </h1>
+              <div class="is-size-5 publication-authors">
+                <span class="author-block">
+                  <a href="https://www.linkedin.com/in/ammar-ahmed68/">Ammar Ahmed</a><sup>1</sup>,</span
+                >&nbsp;
+                <span class="author-block">
+                  <a href="https://www.ntnu.edu/employees/ali.imran">Ali Shariq Imran</a><sup>2</sup>,</span
+                >&nbsp;
+                <span class="author-block">
+                  <a href="https://www.linkedin.com/in/abdul-manaf-6493a3188/">Abdul Manaf</a><sup>1</sup>,</span
+                >&nbsp;
+                <span class="author-block">
+                  <a href="#">Zenun Kastrati</a><sup>3</sup>,</span
+                >&nbsp;
+                <span class="author-block">
+                  <a href="#">Sher Muhammad Daudpota</a><sup>1</sup>
+                </span>
+              </div>
+
+              <div class="is-size-5 publication-authors">
+                <span class="author-block"
+                  ><sup>1</sup>Department of Computer Science, Sukkur IBA
+                  University, Pakistan</span
+                ><br />
+                <span class="author-block"
+                  ><sup>2</sup>Department of Computer Science (IDI), NTNU Gjøvik,
+                  Norway</span
+                ><br />
+                <span class="author-block"
+                  ><sup>3</sup>Department of Informatics, Linnaeus University,
+                  Sweden</span
+                >
+              </div>
+
+              <div class="is-size-5 has-text-centered">
+                <span class="publication-cvpr"
+                  ><strong
+                    >Biomedical Signal Processing and Control, Volume 93, July 2024</strong
+                  ></span
+                >
+              </div>
+
+              <div class="column has-text-centered">
+                <div class="publication-links">
+                  <span class="link-block">
+                    <a
+                      href="https://github.com/ammarlodhi255/pediatric_wrist_abnormality_detection-end-to-end-implementation"
+                      class="external-link button is-normal is-rounded is-dark"
+                    >
+                      <span class="icon"><i class="fab fa-github"></i></span>
+                      <span>Code</span>
+                    </a>
+                  </span>
+                  <span class="link-block">
+                    <a
+                      href="https://www.sciencedirect.com/science/article/pii/S1746809424002027"
+                      class="external-link button is-normal is-rounded is-dark"
+                    >
+                      <span class="icon"><i class="fas fa-file-alt"></i></span>
+                      <span>Paper</span>
+                    </a>
+                  </span>
+                  <span class="link-block">
+                    <a
+                      href="#"
+                      onclick="copyBibtex()"
+                      class="external-link button is-normal is-rounded is-dark"
+                    >
+                      <span class="icon"><i class="fas fa-quote-left"></i></span>
+                      <span>BibTeX</span>
+                    </a>
+                  </span>
+                  <span class="link-block">
+                    <a
+                      href="https://huggingface.co/spaces/AbdulManaf12/wrist-anomaly-detection"
+                      class="external-link button is-normal is-rounded is-primary"
+                      target="_blank"
+                    >
+                      <span class="icon"><i class="fas fa-play"></i></span>
+                      <span>Live Demo</span>
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <!-- Abstract -->
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Abstract</h2>
+            <div class="content has-text-justified">
+              <p>
+                Diagnosing and treating abnormalities in the wrist, specifically 
+                <strong>distal radius and ulna fractures</strong>, is a crucial concern among 
+                children, adolescents, and young adults, with a higher incidence rate during puberty. 
+                However, the scarcity of radiologists and the lack of specialized training among 
+                medical professionals pose a significant risk to patient care.
+              </p>
+              <p>
+                This study employs <strong>state-of-the-art single-stage deep neural network-based 
+                detection models YOLOv5, YOLOv6, YOLOv7, and YOLOv8</strong> to detect wrist 
+                abnormalities. Through extensive experimentation, we found that these YOLO models 
+                outperform the commonly used two-stage detection algorithm, Faster R-CNN, in fracture detection.
+              </p>
+              <p>
+                <strong>YOLOv8m</strong> demonstrated the highest fracture detection sensitivity of 
+                <strong>0.92</strong> and mean average precision (mAP) of <strong>0.95</strong>. 
+                Meanwhile, <strong>YOLOv8x</strong> recorded the highest mAP of <strong>0.77</strong> 
+                for all classes on the GRAZPEDWRI-DX pediatric wrist dataset, highlighting the potential 
+                of single-stage models for enhancing pediatric wrist imaging.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Demo -->
+        <div class="columns is-centered has-text-centered" id="demo">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">System Demo</h2>
+            <div class="content has-text-justified">
+              <div style="text-align: center; margin: 2rem 0">
+                <img
+                  src="static/assets/gif/interface.gif"
+                  alt="System Interface Demo"
+                  style="max-width: 80%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1)"
+                />
+                <p class="caption">
+                  <b>Interactive Web Interface:</b> Our system provides a user-friendly 
+                  interface for uploading pediatric wrist X-ray images and receiving 
+                  automated fracture detection results
+                </p>
+              </div>
+
+              <div class="medical-highlight">
+                <h4 class="title is-5">Clinical Impact:</h4>
+                <ul style="text-align: left">
+                  <li>
+                    <strong>Addresses Radiologist Scarcity:</strong> Provides automated screening 
+                    to support medical professionals in areas with limited specialist access
+                  </li>
+                  <li>
+                    <strong>Reduces Diagnosis Time:</strong> Instant analysis of pediatric wrist 
+                    X-rays with high accuracy detection
+                  </li>
+                  <li>
+                    <strong>Mobile-Ready:</strong> Available as both web application and Android 
+                    mobile app for offline usage
+                  </li>
+                  <li>
+                    <strong>High Precision:</strong> Achieves fracture detection mAP of 0.95 
+                    with YOLOv8x model
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Key Contributions -->
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Key Research Contributions</h2>
+            <div class="content has-text-justified">
+              <div class="highlight-box">
+                <p>
+                  <strong>Novel Finding:</strong> First comprehensive study demonstrating that 
+                  single-stage YOLO models significantly outperform traditional two-stage 
+                  detection methods (Faster R-CNN) for pediatric wrist fracture detection.
+                </p>
+              </div>
+
+              <div class="results-grid">
+                <div class="metric-highlight">
+                  <h4 class="title is-6">
+                    📊 Performance Benchmark
+                  </h4>
+                  <p>
+                    Comprehensive evaluation of 23 different detection procedures 
+                    on 1016 test samples from GRAZPEDWRI-DX dataset
+                  </p>
+                </div>
+                <div class="metric-highlight">
+                  <h4 class="title is-6">🎯 State-of-the-Art Results</h4>
+                  <p>
+                    YOLOv8x achieved 0.77 mAP for all classes and 0.95 mAP 
+                    specifically for fracture detection
+                  </p>
+                </div>
+                <div class="metric-highlight">
+                  <h4 class="title is-6">🏥 Clinical Application</h4>
+                  <p>
+                    End-to-end system deployment with web interface and 
+                    Android mobile application for real-world usage
+                  </p>
+                </div>
+                <div class="metric-highlight">
+                  <h4 class="title is-6">🔬 Model Comparison</h4>
+                  <p>
+                    First systematic comparison of YOLOv5, YOLOv6, YOLOv7, 
+                    and YOLOv8 variants for medical imaging applications
+                  </p>
+                </div>
+              </div>
+
+              <div class="tech-stack">
+                <span class="tech-badge">YOLOv8</span>
+                <span class="tech-badge">PyTorch</span>
+                <span class="tech-badge">Flask</span>
+                <span class="tech-badge">OpenCV</span>
+                <span class="tech-badge">Android</span>
+                <span class="tech-badge">Medical Imaging</span>
+                <span class="tech-badge">Computer Vision</span>
+                <span class="tech-badge">Deep Learning</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results -->
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Experimental Results</h2>
+            <div class="content has-text-justified">
+              <div class="highlight-box">
+                <p>
+                  <strong>Dataset:</strong> GRAZPEDWRI-DX pediatric wrist dataset with 
+                  1016 test samples. All models evaluated using precision, recall, 
+                  and mean average precision (mAP) metrics.
+                </p>
+              </div>
+
+              <h3 class="title is-4">YOLOv8 Model Performance</h3>
+              <div style="overflow-x: auto; margin: 2rem 0">
+                <table class="table is-striped is-hoverable is-fullwidth">
+                  <thead>
+                    <tr>
+                      <th>Model Variant</th>
+                      <th>Image Size (pixels)</th>
+                      <th>Precision</th>
+                      <th>Recall</th>
+                      <th>mAP@0.5</th>
+                      <th>mAP@0.5:0.95</th>
+                      <th>Model Weights</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>YOLOv8n</strong></td>
+                      <td>640</td>
+                      <td>0.73</td>
+                      <td>0.58</td>
+                      <td>0.59</td>
+                      <td>0.36</td>
+                      <td><a href="https://github.com/AbdulManaf12/FYP-Project/releases/download/v0.0.0/YOLOv8n.pt">Download</a></td>
+                    </tr>
+                    <tr>
+                      <td><strong>YOLOv8s</strong></td>
+                      <td>640</td>
+                      <td>0.72</td>
+                      <td>0.63</td>
+                      <td>0.65</td>
+                      <td>0.39</td>
+                      <td><a href="https://github.com/AbdulManaf12/FYP-Project/releases/download/v0.0.0/YOLOv8s.pt">Download</a></td>
+                    </tr>
+                    <tr>
+                      <td><strong>YOLOv8m</strong></td>
+                      <td>640</td>
+                      <td>0.60</td>
+                      <td><strong>0.92</strong></td>
+                      <td>0.56</td>
+                      <td>0.36</td>
+                      <td><a href="https://github.com/AbdulManaf12/FYP-Project/releases/download/v0.0.0/YOLOv8m.pt">Download</a></td>
+                    </tr>
+                    <tr>
+                      <td><strong>YOLOv8l</strong></td>
+                      <td>640</td>
+                      <td>0.74</td>
+                      <td>0.60</td>
+                      <td>0.62</td>
+                      <td>0.41</td>
+                      <td><a href="https://github.com/AbdulManaf12/FYP-Project/releases/download/v0.0.0/YOLOv8l.pt">Download</a></td>
+                    </tr>
+                    <tr class="has-background-success-light">
+                      <td><strong>YOLOv8x</strong></td>
+                      <td>640</td>
+                      <td><strong>0.79</strong></td>
+                      <td>0.64</td>
+                      <td><strong>0.77</strong></td>
+                      <td><strong>0.53</strong></td>
+                      <td><a href="https://github.com/AbdulManaf12/FYP-Project/releases/download/v0.0.0/YOLOv8x.pt">Download</a></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div style="text-align: center; margin: 2rem 0">
+                <img
+                  src="static/assets/img/mAPAll.png"
+                  alt="mAP Comparison Results"
+                  style="max-width: 70%; border-radius: 8px"
+                />
+                <p class="caption">
+                  <b>Model Performance Comparison:</b> Mean Average Precision (mAP) 
+                  scores for all YOLO variants and Faster R-CNN across fracture 
+                  detection and all classes
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Architecture -->
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">System Architecture</h2>
+            <div class="content has-text-justified">
+              <div style="text-align: center; margin: 2rem 0">
+                <img
+                  src="static/assets/img/archi2.png"
+                  alt="System Architecture"
+                  style="max-width: 90%; border-radius: 8px"
+                />
+                <p class="caption">
+                  <b>End-to-End System Pipeline:</b> From X-ray image input through 
+                  YOLO-based detection to clinical diagnosis output
+                </p>
+              </div>
+
+              <div class="metric-highlight">
+                <h4 class="title is-5">Implementation Features:</h4>
+                <div class="results-grid">
+                  <div class="result-item">
+                    <h5 class="title is-6">🌐 Web Application</h5>
+                    <p>Flask-based web interface for easy image upload and result visualization</p>
+                  </div>
+                  <div class="result-item">
+                    <h5 class="title is-6">📱 Mobile App</h5>
+                    <p>Android application for offline diagnosis in resource-limited settings</p>
+                  </div>
+                  <div class="result-item">
+                    <h5 class="title is-6">🔄 Real-time Processing</h5>
+                    <p>Instant fracture detection with bounding box visualization</p>
+                  </div>
+                  <div class="result-item">
+                    <h5 class="title is-6">💾 Model Management</h5>
+                    <p>Support for multiple YOLO model variants with easy switching</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="highlight-box">
+                <h4 class="title is-5">Technical Specifications:</h4>
+                <ul style="text-align: left">
+                  <li>
+                    <strong>Input:</strong> Pediatric wrist X-ray images (DICOM, PNG, JPG formats)
+                  </li>
+                  <li>
+                    <strong>Processing:</strong> YOLO-based object detection with confidence scoring
+                  </li>
+                  <li>
+                    <strong>Output:</strong> Fracture localization with bounding boxes and confidence levels
+                  </li>
+                  <li>
+                    <strong>Deployment:</strong> Containerized deployment with Docker support
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clinical Impact -->
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Clinical Impact & Applications</h2>
+            <div class="content has-text-justified">
+              <div class="medical-highlight">
+                <h4 class="title is-5">Addressing Healthcare Challenges:</h4>
+                <p>
+                  Our system directly addresses the critical shortage of radiologists 
+                  and specialized training in pediatric fracture diagnosis, particularly 
+                  important given the higher incidence of distal radius and ulna fractures 
+                  during puberty.
+                </p>
+              </div>
+
+              <div class="results-grid">
+                <div class="metric-highlight">
+                  <h4 class="title is-6">
+                    ⚡ Rapid Diagnosis
+                  </h4>
+                  <p>
+                    Reduces diagnosis time from hours to seconds, enabling 
+                    immediate clinical decision-making
+                  </p>
+                </div>
+                <div class="metric-highlight">
+                  <h4 class="title is-6">🎯 High Accuracy</h4>
+                  <p>
+                    95% mAP for fracture detection ensures reliable 
+                    clinical support and reduced false negatives
+                  </p>
+                </div>
+                <div class="metric-highlight">
+                  <h4 class="title is-6">🌍 Global Accessibility</h4>
+                  <p>
+                    Mobile app enables deployment in resource-limited 
+                    settings without internet connectivity
+                  </p>
+                </div>
+                <div class="metric-highlight">
+                  <h4 class="title is-6">📊 Clinical Support</h4>
+                  <p>
+                    Assists medical professionals with consistent, 
+                    objective analysis of pediatric wrist X-rays
+                  </p>
+                </div>
+              </div>
+
+              <div class="research-question">
+                <p>
+                  <strong>Future Clinical Integration:</strong> The system is designed 
+                  for integration into existing radiology workflows, providing 
+                  decision support rather than replacement of clinical expertise.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Installation & Usage -->
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Installation & Usage</h2>
+            <div class="content has-text-justified">
+              <div class="highlight-box">
+                <p>
+                  <strong>Quick Start:</strong> Get the system running locally 
+                  in minutes with our comprehensive setup guide.
+                </p>
+              </div>
+
+              <div class="metric-highlight">
+                <h4 class="title is-5">Installation Steps:</h4>
+                <ol style="text-align: left">
+                  <li>Clone the repository: <code>git clone https://github.com/ammarlodhi255/pediatric_wrist_abnormality_detection-end-to-end-implementation.git</code></li>
+                  <li>Navigate to project directory: <code>cd pediatric_wrist_abnormality_detection-end-to-end-implementation</code></li>
+                  <li>Create virtual environment: <code>python3 -m venv env</code></li>
+                  <li>Activate environment: <code>source env/bin/activate</code></li>
+                  <li>Install dependencies: <code>pip install -r requirements.txt</code></li>
+                  <li>Run the application: <code>flask run</code></li>
+                </ol>
+              </div>
+
+              <div style="text-align: center; margin: 2rem 0">
+                <a
+                  href="https://github.com/ammarlodhi255/pediatric_wrist_abnormality_detection-end-to-end-implementation"
+                  class="button is-large is-primary"
+                  target="_blank"
+                >
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Get Started</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact & Acknowledgments -->
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Contact & Acknowledgments</h2>
+            <div class="content has-text-justified">
+              <div class="metric-highlight">
+                <div class="columns">
+                  <div class="column">
+                    <h4 class="title is-5">Research Team</h4>
+                    <p>
+                      <strong>Ammar Ahmed</strong> - 
+                      <a href="mailto:ammarlodhi68@gmail.com">ammarlodhi68@gmail.com</a><br>
+                      <a href="https://www.linkedin.com/in/ammar-ahmed68/">LinkedIn</a>
+                    </p>
+                    <p>
+                      <strong>Abdul Manaf</strong> - 
+                      <a href="mailto:abdulmanafsahito@gmail.com">abdulmanafsahito@gmail.com</a><br>
+                      <a href="https://www.linkedin.com/in/abdul-manaf-6493a3188/">LinkedIn</a>
+                    </p>
+                    <p>
+                      <strong>Ali Shariq Imran</strong> - NTNU Gjøvik, Norway
+                    </p>
+                  </div>
+                  <div class="column">
+                    <h4 class="title is-5">Institutions</h4>
+                    <p>
+                      <strong>Sukkur IBA University</strong> - Pakistan<br>
+                      <strong>NTNU Gjøvik</strong> - Norway<br>
+                      <strong>Linnaeus University</strong> - Sweden
+                    </p>
+                    <p>
+                      <strong>Published in:</strong>
+                      <a href="https://www.sciencedirect.com/science/article/pii/S1746809424002027">
+                        Biomedical Signal Processing and Control
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="highlight-box">
+                <h4 class="title is-5">Acknowledgments</h4>
+                <p>
+                  We express our sincere gratitude to Dr. Sher Muhammad Daudpota, 
+                  Zenun Kastrati, and all supervisors who provided guidance throughout 
+                  this research. Special thanks to the committee members and the 
+                  institutions that supported this work.
+                </p>
+              </div>
+
+              <div
+                style="
+                  text-align: center;
+                  margin: 2rem 0;
+                  padding: 1rem;
+                  background-color: #f0f7ff;
+                  border-radius: 8px;
+                "
+              >
+                <p>
+                  <em
+                    >This research contributes to advancing automated medical 
+                    imaging analysis for improved pediatric healthcare outcomes.</em
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
